@@ -29,6 +29,9 @@ public class ConsoleColorsView extends ConsoleView {
 	@Override
 	protected String consoleCell(String celStr) {
 		String consoleStr = celStr;
+		if (celStr == null) {
+			return EMPTY_CELL; // Return a default cell for null values
+		}
 
 		if (celStr.equals(Messages.EMPTY)) consoleStr = EMPTY_CELL;
 		else if (celStr.equals(Messages.WALL)) consoleStr = WALL_CELL;

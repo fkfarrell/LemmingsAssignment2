@@ -11,6 +11,7 @@ import tp1.view.Messages;
 
 public class Main {
 
+	@SuppressWarnings("deprecation")
 	public static void main(String[] args) {
 		// Required to avoid issues with tests
 		Locale.setDefault(new Locale("es", "ES"));
@@ -32,3 +33,9 @@ public class Main {
 		}
 	}
 }
+//command -> no params command -> helpcommand, reset command etc. ABSTRACT CLASSES, to avoid repeating the parse method. only bottom levels are not abstract 
+//no params has no arguments unlike reset role which takes in a role and coordinates of a lemming
+//call excecute on itself which is an overwritten method that each object knows what it should do
+//inheritance hierarchy for commands, for game objects, for roles
+
+//exam add new of one in inheritance hierarchy

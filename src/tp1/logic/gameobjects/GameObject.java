@@ -7,7 +7,7 @@ public abstract class GameObject {
 
 	protected Position pos;
 	protected boolean isAlive;
-	protected Game game;
+	protected static Game game;
 
 	public GameObject(Game game, Position pos) {
 		this.isAlive = true;

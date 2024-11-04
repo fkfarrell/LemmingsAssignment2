@@ -7,49 +7,66 @@ import tp1.logic.lemmingRoles.WalkerRole;
 
 public class Lemming extends GameObject {
 
-	WalkerRole role;
-	private int fallForce = 0;
-	private Direction dir;
+    private WalkerRole role;
+    private int forceOfFall = 0;
+    private Direction dir;
+    private static final int MAX_FALL = 3;
 
-	public Lemming(Game game, Position pos, Direction dir) {
-		super(game, pos);
-		this.role = WalkerRole();
-		this.dir = dir;
-	}
+    public Lemming(Game game, Position pos, Direction dir) {
+        super(game, pos);
+        this.role = new WalkerRole();
+        this.dir = dir;
+    }
 
-	public Direction getDirection() {
-		return this.dir;
-	}
+    public Direction getDirection() {
+        return this.dir;
+    }
 
-	private WalkerRole WalkerRole() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public void walkOrFall() {
+        // Calculate the new position based on the current direction
+        int moveX = this.pos.getCol() + dir.getX();
+        int moveY = this.pos.getRow() + dir.getY();
 
-	// Not mandatory but recommended
-	public void walkOrFall() {
-		// TODO Auto-generated method stub
-	}
+        // Check if the new position is within the bounds of the board
+        if (moveY < Game.DIM_Y && moveY >= 0 && moveX < Game.DIM_X && moveX >= 0) {
+            // Move one space in the direction specified
+            this.pos = new Position(moveX, moveY);
+            forceOfFall++; // Increment fall count if falling
+        } else {
+            // If the lemming tries to move out of bounds, it should reverse direction
+            reverseDir();
+        }
 
-	/**
-	 * Implements the automatic update
-	 */
-	public void update() {
-		if (isAlive())
-			role.play(this);
-		// TODO fill your code
-	}
+        // Check if the lemming has fallen too far
+        if (forceOfFall > MAX_FALL) {
+            this.isAlive = false; // Mark lemming as dead if it exceeds max fall
+        }
+    }
 
-	@Override
-	public String getIcon() {
-		// TODO Auto-generated method stub
-		return role.getIcon(this);
-	}
+    private void reverseDir() {
+        if (dir == Direction.RIGHT) {
+            dir = Direction.LEFT;
+        } else {
+            dir = Direction.RIGHT;
+        }
+    }
 
-	// TODO you should write a toString method to return the string that represents
-	// the object status
-	@Override
-	public String toString() {
-		return null;
-	}
+    @Override
+    public void update() {
+        if (isAlive()) {
+            role.play(this);
+            walkOrFall();
+        }
+        // Additional update logic as necessary
+    }
+
+    @Override
+    public String getIcon() {
+        return "L"; // Returns the icon representing a lemming
+    }
+
+    @Override
+    public String toString() {
+        return "Lemming at " + pos; // Example string representation
+    }
 }

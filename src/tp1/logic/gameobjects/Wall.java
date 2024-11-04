@@ -4,8 +4,9 @@ import tp1.logic.Game;
 import tp1.logic.Position;
 
 public class Wall extends GameObject {
+    private String wallSprite = "▓";
 
-    public Wall(Game game, Position pos) {
+    public Wall(Position pos) {
         super(game, pos);
     }
 
@@ -17,6 +18,6 @@ public class Wall extends GameObject {
     @Override
     public String getIcon() {
         // TODO Auto-generated method stub
-        return null;
+        return wallSprite;
     }
 }

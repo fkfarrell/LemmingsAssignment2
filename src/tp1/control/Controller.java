@@ -24,22 +24,19 @@ public class Controller {
 	 * Runs the game logic, coordinate Model(game) and View(view)
 	 */
 	public void run() {
-		String[] words = null;
-
 		view.showWelcome();
-
-		view.showGame();
-
-		
-		while ( !game.isFinished()) {
-			words = view.getPrompt();
-			Command command = CommandGenerator.parse(words);
-			if (command != null)
-				command.execute(game, view);
-			else 
-				view.showError(Messages.UNKNOWN_COMMAND.formatted(words[0]));
-
-		}
-		view.showEndMessage();
+	
+		while (game.gameRunning() && !game.playerWins()) {
+			// Draw Phase
+			view.showGame();
+	
+			// User Command
+			String[] command = view.getPrompt();
+			
+			// Check if command is empty before processing
+			if (command.length == 0) {
+				continue;  // Skip this loop iteration if no command entered
+			}
+		}	
 	}
-}
+}	

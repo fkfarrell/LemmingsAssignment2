@@ -1,5 +1,4 @@
 package tp1.logic;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,17 +21,22 @@ public class GameObjectContainer {
 			if (object.isInPosition(position)) {
 				return object.getIcon();
 			}
-
 		}
 		return " ";
 	}
+
+	public void update() {
+        for (GameObject object : objects) {
+            object.update(); // Call update on each GameObject
+        }
+	}	
 
 	// TODO you should write a toString method to return the string that represents
 	// the object status
 	@Override
 	public String toString() {
 		// should call to string on the object in container?
-		// would that breach incapsulation
+		// would that breach encapsulation
 		return null;
 	}
 }
