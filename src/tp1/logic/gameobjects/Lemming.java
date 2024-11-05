@@ -22,51 +22,88 @@ public class Lemming extends GameObject {
         return this.dir;
     }
 
+    public Position getPosition() {
+        return this.pos;
+    }
+
+    public boolean canMove(Position pos, Direction dir) {
+        int moveX = this.pos.getCol() + dir.getX();
+        int moveY = this.pos.getRow() + dir.getY();
+
+        // Check if there's a floor beneath the lemming
+        if (game.positionToString(pos.getCol(), pos.getRow() + 1).equals("▓")) {
+            // If there's a floor, reset fall force and check for walls
+            this.forceOfFall = 0;
+            if (moveX == 0 || moveX == Game.DIM_X - 1) {
+                this.reverseDir();
+            }
+
+            // Check if moving in the current direction hits a wall
+            if (game.positionToString(moveX, moveY).equals("▓")) {
+                this.reverseDir();
+                return false;
+            }
+            return true;
+        } else {
+            // If there's no floor, set direction to DOWN
+            this.dir = Direction.DOWN;
+            return true;
+        }
+    }
+
     public void walkOrFall() {
         // Calculate the new position based on the current direction
         int moveX = this.pos.getCol() + dir.getX();
         int moveY = this.pos.getRow() + dir.getY();
 
-        // Check if the new position is within the bounds of the board
+        // Move if within bounds
         if (moveY < Game.DIM_Y && moveY >= 0 && moveX < Game.DIM_X && moveX >= 0) {
-            // Move one space in the direction specified
             this.pos = new Position(moveX, moveY);
-            forceOfFall++; // Increment fall count if falling
+            forceOfFall++; // Increment fall count if moving down
         } else {
-            // If the lemming tries to move out of bounds, it should reverse direction
             reverseDir();
         }
 
-        // Check if the lemming has fallen too far
+        // Check if lemming has exceeded max fall height
         if (forceOfFall > MAX_FALL) {
-            this.isAlive = false; // Mark lemming as dead if it exceeds max fall
+            this.isAlive = false;
         }
     }
 
     private void reverseDir() {
-        if (dir == Direction.RIGHT) {
-            dir = Direction.LEFT;
-        } else {
-            dir = Direction.RIGHT;
+        dir = (dir == Direction.RIGHT) ? Direction.LEFT : Direction.RIGHT;
+    }
+
+    public void update() {
+        // Update lemming’s status (falling, dead, or moving)
+        if (isAlive) {
+            advance(this);
+            if (dir == Direction.DOWN) {
+                forceOfFall++;
+            } else {
+                forceOfFall = 0; // Reset fall force if on the ground
+            }
+        }
+
+        // Mark lemming as dead if it exceeds max fall height
+        if (forceOfFall > MAX_FALL) {
+            this.isAlive = false;
         }
     }
 
-    @Override
-    public void update() {
-        if (isAlive()) {
-            role.play(this);
-            walkOrFall();
+    public void advance(Lemming lemming) {
+        if (lemming.canMove(lemming.getPosition(), lemming.getDirection())) {
+            lemming.walkOrFall();
         }
-        // Additional update logic as necessary
     }
 
     @Override
     public String getIcon() {
-        return "L"; // Returns the icon representing a lemming
+        return "L";
     }
 
     @Override
     public String toString() {
-        return "Lemming at " + pos; // Example string representation
+        return "Lemming at " + pos;
     }
 }

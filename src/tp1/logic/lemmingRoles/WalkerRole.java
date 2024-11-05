@@ -36,4 +36,6 @@ public class WalkerRole {
 	public String toString() {
 		return getName();
 	}
+
+	
 }
